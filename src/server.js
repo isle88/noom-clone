@@ -14,13 +14,27 @@ const httpServer = http.createServer(app);
 const wsServer = new Server(httpServer);
 
 wsServer.on("connection", (socket) => {
-  console.log(socket);
+  socket["nickname"] = "anonymous";
+  socket.on("join_room", (roomName, done) => {
+    socket.join(roomName);
+    done();
+    socket.to(roomName).emit("welcome_msg", socket.nickname);
+  });
+  socket.on("disconnecting", () => {
+    socket.rooms.forEach((room) => socket.to(room).emit("bye", socket.nickname));
+  });
+  socket.on("new_msg", (msg, room, done) => {
+    socket.to(room).emit("new_msg", `${socket.nickname}: ${msg}`);
+    done(); // doesn't execute on backend. only execute on frontend
+  });
+  socket.on("nickname", (nickname) => {
+    socket["nickname"] = nickname;
+  });
 });
 
 // const wss = new WebSocket.Server({ server });
 
 // const sockets = [];
-
 // wss.on("connection", (socket) => {
 //   sockets.push(socket);
 //   socket["nickname"] = "anonymous";
