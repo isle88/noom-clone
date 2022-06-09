@@ -11,12 +11,12 @@ html(lang="en")
             h1 Noom
         main
             div#welcome 
-                form#name
-                    input(placeholder="name", required, type="text")
-                    button Save
-                form#room_name
-                    input(placeholder="room name", required, type="text")
+                form
+                    input#name(placeholder="name", required, type="text")
+                    input#room_name(placeholder="room name", required, type="text")
                     button Enter Room    
+                    //- button Save
+                //- form#room_name
             div#room 
                 h3
                 ul 
