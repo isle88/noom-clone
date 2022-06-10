@@ -44,12 +44,31 @@ function handleRoomSubmit(event) {
 }
 form.addEventListener("submit", handleRoomSubmit);
 
-socket.on("welcome_msg", (user) => {
+function paintRoomInfo(user, newCount) {
+  const h3 = room.querySelector("h3");
+  h3.innerText = `Room: ${roomName} (${newCount})`;
   addMessage(`${user} joined!`);
+}
+
+socket.on("welcome_msg", (user, newCount) => {
+  paintRoomInfo(user, newCount)
 });
 
-socket.on("bye", (user) => {
-  addMessage(`${user} left...`);
+socket.on("bye", (user, newCount) => {
+  paintRoomInfo(user, newCount)
 });
 
 socket.on("new_msg", addMessage);
+
+socket.on("room_change", (rooms) => {
+  const roomList = welcome.querySelector("ul");
+  roomList.innerText = "";
+  if (rooms.length === 0) {
+    return;
+  }
+  rooms.forEach((room) => {
+    const li = document.createElement("li");
+    li.innerText = room;
+    roomList.appendChild(li);
+  });
+});
