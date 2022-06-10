@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io("http://localhost:3000");
 
 const myFace = document.getElementById("myFace");
 const muteBtn = document.getElementById("mute");
